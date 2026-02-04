@@ -1,0 +1,5 @@
+to create the package.json use command npm init 
+to create the package.json use command npm init -y (this will not ask about every line of the file it directly create the file and you can edit that you want to edit) 
+to uninstall the package use command npm uninstall
+to update the package use command npm update
+to run scripts use npm run and the script name 
