@@ -30,6 +30,17 @@ async function add(req) {
 
 }
 
+async function d(req) {
+    const deletedelement = await bookstoreapi.findByIdAndDelete(req.params.id);
+    return deletedelement;
+}
+
+async function update(req) {
+    const data = await bookstoreapi.findByIdAndUpdate(req.params.id, req.body);
+    console.log(data);
+    return data;
+}
+
 app.get('/', async (req, res) => {
     const data = await show();
     res.json(data);
@@ -38,6 +49,15 @@ app.post('/add', async (req, res) => {
     const data = await add(req);
     res.json(data);
 })
+app.delete('/delete/:id', async (req, res) => {
+    const data = await d(req);
+    res.json(data);
+})
+app.put('/update/:id', async (req, res) => {
+    const data = await update(req);
+    res.json(data);
+})
+
 
 const port = 3000;
 app.listen(port, () => {
