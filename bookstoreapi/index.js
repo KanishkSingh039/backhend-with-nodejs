@@ -1,8 +1,19 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
+const link = process.env.LINK;
+const port = process.env.PORT;
 const app = express();
 app.use(express.json());
-mongoose.connect('mongodb+srv://kanishks_039:kanishks_039@cluster0.fgrqxzo.mongodb.net/?appName=Cluster0');
+async function connection() {
+    try {
+        await mongoose.connect(link);
+        console.log('connected with database succesfully');
+    } catch (error) {
+        console.log(error);
+    }
+}
+connection();
 
 const schema = new mongoose.Schema({
     bookname: String,
@@ -41,10 +52,22 @@ async function update(req) {
     return data;
 }
 
+async function singleelementbyid(req) {
+    const data = await bookstoreapi.findById(req.params.id);
+    console.log(data);
+    return data;
+}
+
 app.get('/', async (req, res) => {
     const data = await show();
     res.json(data);
 })
+
+app.get('/:id', async (req, res) => {
+    const data = await singleelementbyid(req);
+    res.json(data);
+})
+
 app.post('/add', async (req, res) => {
     const data = await add(req);
     res.json(data);
@@ -57,9 +80,6 @@ app.put('/update/:id', async (req, res) => {
     const data = await update(req);
     res.json(data);
 })
-
-
-const port = 3000;
 app.listen(port, () => {
     console.log(`server started at ${port}`);
 })
