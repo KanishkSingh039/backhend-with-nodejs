@@ -42,10 +42,20 @@ const register = async (req, res) => {
 
 const login = async (req, res) => {
     try {
-
+        const { email, password } = req.body;
+        const finduser = await userschema.findOne({ email });
+        if (finduser) {
+            const verifyuser = await bcrypt.compare(password, finduser.password);
+            verifyuser ? res.status(200).json({
+                massege: "user verified"
+            }) :
+                res.status(400).json({
+                    massege: "user not found"
+                })
+        }
     } catch (error) {
         res.status(500).json({
-            massege: "error found"
+            massege: `error accourd : ${error}`
         })
     }
 }
