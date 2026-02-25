@@ -1,5 +1,6 @@
 const userschema = require('./Schema/user.js');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 //here bcrypt is used to create a hash password so that any one having a access of data does not get the access of real password 
 //it generates the unreadable form of password of any certain password, so that no one can get know about the real password
 // and for authantication we use bcrypt compare to compare the entered password with the stored password for the authentication
@@ -46,8 +47,15 @@ const login = async (req, res) => {
         const finduser = await userschema.findOne({ email });
         if (finduser) {
             const verifyuser = await bcrypt.compare(password, finduser.password);
+            const token = jwt.sign({
+                userName: verifyuser.username,
+                password: verifyuser.password
+            }, process.env.SECRET_KEY, { expiresIn: "15m" });
+            //jwt token contains the payload which contains data with a secret key through which that data can be accessible 
+            //it created by the jwt.sign , it contains the data,secret key and controls for the token behaviours
+
             verifyuser ? res.status(200).json({
-                massege: "user verified"
+                massege: `user verified : ${token}`
             }) :
                 res.status(400).json({
                     massege: "user not found"
