@@ -3,10 +3,16 @@ const express = require('express');
 const mongoose = require('mongoose');
 const connect = require("./database/db.js");
 const router = require("./auth-route/index.js");
+const userschema=require("./Schema/user.js");
 const app = express();
 const port = process.env.PORT;
 app.use(express.json());
 connect();
+const getdata=async(req,res)=>{
+    const data=await userschema.find({});
+    res.status(200).json(data);
+}
+app.get('/api/auth',getdata);
 app.use('/api/auth', router);//here the path /api/auth is a parent apth asign with help of app.use
 app.listen(port, () => {
     console.log(`Server Started at ${port}`);

@@ -20,7 +20,8 @@ const register = async (req, res) => {
             const checkusercreated = userschema.create({
                 username: req.body.username,
                 email: req.body.email,
-                password: hashedpassword
+                password: hashedpassword,
+                role:req.body.role||'user'
             });
             if (checkusercreated) {
                 res.status(200).json({
@@ -54,12 +55,23 @@ const login = async (req, res) => {
             //jwt token contains the payload which contains data with a secret key through which that data can be accessible 
             //it created by the jwt.sign , it contains the data,secret key and controls for the token behaviours
 
+            // res.cookie("token", token, {
+                
+            // })
+            //res.cookie contains the name of cookie , value of that cookie and options ,options give the controls which helps us to control the behaviour of cookie
+            //cookie needs because it is more secure than local storage and browser stores the cookie in browser memory and browser storage system
+            // browser automatically sends it
+            //there are tow types of cookies 
+            //session cookie -> it stores in browser memory and delete when the browser closes 
+            //persistent cookie-> stored in disk and it has its expire time and stays after browser closes
+
             verifyuser ? res.status(200).json({
                 massege: `user verified : ${token}`
             }) :
                 res.status(400).json({
                     massege: "user not found"
                 })
+                
         }
     } catch (error) {
         res.status(500).json({
