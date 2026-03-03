@@ -50,7 +50,8 @@ const login = async (req, res) => {
             const verifyuser = await bcrypt.compare(password, finduser.password);
             const token = jwt.sign({
                 userName: finduser.username,
-                password: finduser.password
+                password: finduser.password,
+                role:finduser.role
             }, process.env.SECRET_KEY, { expiresIn: "15m" });
             //jwt token contains the payload which contains data with a secret key through which that data can be accessible 
             //it created by the jwt.sign , it contains the data,secret key and controls for the token behaviours
