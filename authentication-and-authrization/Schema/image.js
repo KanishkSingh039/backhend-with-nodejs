@@ -5,12 +5,18 @@ const imageschema=new mongoose.Schema({
         required:true,
     },
     public_id:{
-        type:Number,
+        type:String,
         required:true
     },
     uploadedby:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:'user'
+        ref:'user',
+        required:true
+    },
+    path:{
+        type:String,
+        ref:'user',
+        required:true
     }
 },{timestamps:true});
 module.exports=mongoose.model('image',imageschema);

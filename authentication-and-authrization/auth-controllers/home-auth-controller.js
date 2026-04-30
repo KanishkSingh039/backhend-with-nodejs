@@ -15,7 +15,7 @@ const authchecker=async(req,res,next)=>{
     try {
         const verifingthetoken=jwt.verify(token,process.env.SECRET_KEY);
         console.log(verifingthetoken);
-        req.body=verifingthetoken;
+        req.user=verifingthetoken;
         // res.json({
         //     decodedtoken:verifingthetoken,
         //     body:req.body
@@ -27,7 +27,7 @@ const authchecker=async(req,res,next)=>{
         
     } catch (e) {
         res.status(500).json({
-            massege:`lease recheck the token  : ${e}`
+            massege:`please recheck the token  : ${e}`
         })
     }
 

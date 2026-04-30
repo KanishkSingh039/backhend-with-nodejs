@@ -51,7 +51,9 @@ const login = async (req, res) => {
             const token = jwt.sign({
                 userName: finduser.username,
                 password: finduser.password,
-                role:finduser.role
+                email:finduser.email,
+                role:finduser.role,
+                id:finduser._id
             }, process.env.SECRET_KEY, { expiresIn: "15m" });
             //jwt token contains the payload which contains data with a secret key through which that data can be accessible 
             //it created by the jwt.sign , it contains the data,secret key and controls for the token behaviours
@@ -70,10 +72,12 @@ const login = async (req, res) => {
                 massege: `user verified : ${token}`
             }) :
                 res.status(400).json({
-                    massege: "user not found"
+                    massege: "wrong password! please try again later"
                 })
 
         }
+
+
     } catch (error) {
         res.status(500).json({
             massege: `error accourd : ${error}`
@@ -81,4 +85,31 @@ const login = async (req, res) => {
     }
 }
 
-module.exports = { register, login }
+
+const changepassword=async(req,res)=>{
+    try {
+        const verifyuser=await userschema.findOne({email:req.user.email});
+        if(!verifyuser)
+        {
+            return res.status(400).json({
+                message:"user not found"
+            })
+        }
+        const {newpass}= req.body;
+        const salt=await bcrypt.genSalt(10);
+        const hash=await bcrypt.hash(newpass,salt);
+        verifyuser.password=hash;
+        await verifyuser.save()
+        return res.status(200).json({
+            message:"password change succesfully",
+        })
+    }
+        
+     catch (error) {
+        return res.status(400).json({
+            messsage:`${error}`
+        })
+    }
+}
+
+module.exports = { register, login ,changepassword }
