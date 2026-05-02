@@ -7,10 +7,11 @@ const aggregating=async(req,res)=>{
             {
                 $match:{
                     author:new mongoose.Types.ObjectId(req.params.id),
-            }},
+            }},   {$sort: {page:-1}},             {$limit:2},
+
                 {
                     $group:{
-                        _id:"author",
+                        _id:"$author",
                         totalpage:{$sum:'$page'},
                         maxpage:{$max:"$page"},
                         minpage:{$min:"$page"},
@@ -37,7 +38,7 @@ const aggregating=async(req,res)=>{
         
     } catch (error) {
         return res.status(400).json({
-            message:error
+            message:error.message
         })
     }
 }
